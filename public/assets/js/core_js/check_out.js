@@ -103,7 +103,7 @@ let checkOut = {
         function getTwoDaysLater() {
             var today = new Date();
             var twoDaysLater = new Date(today);
-            twoDaysLater.setDate(today.getDate() + 0);
+            twoDaysLater.setDate(today.getDate() + 1);
             return twoDaysLater.toISOString().split('T')[0]; // Convertir a formato YYYY-MM-DD
         }
 
@@ -116,6 +116,8 @@ let checkOut = {
         // Configuración dinámica para mostrar o no los sábados y domingos
         var mostrarSabados = true; // Cambia esto a false para ocultar los sábados
         var mostrarDomingos = false; // Cambia esto a false para ocultar los domingos
+
+        var countdownInterval;  // Variable to hold the interval ID
 
         // Configuración de Toastr para evitar mensajes duplicados
         toastr.options = {
@@ -161,7 +163,6 @@ let checkOut = {
                     }
                 ],
                 eventClick: function(info) {
-                    console.log("1", info);
 
                     var events = calendar.getEvents();
 
@@ -289,7 +290,7 @@ let checkOut = {
 
 
                     // Mostrar el modal de confirmación
-                    showConfirmationModal(`Cita agendada exitosamente para el ${formattedDateTime}.<br>Tiene 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
+                    showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tiene 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
 
 
                     // Cerrar el OffCanvas
