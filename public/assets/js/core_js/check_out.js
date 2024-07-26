@@ -110,6 +110,7 @@ let checkOut = {
         var calendarInitialized = false;
         var calendar;
         var selectedLabel = null;  // Keep track of the previously selected label
+        var countdownInterval;  // Variable to hold the interval ID
 
         var selectedDate = null;
 
@@ -198,6 +199,10 @@ let checkOut = {
                                 event.remove();
                             }
                         });
+
+                        // Quitar el contador.
+                        $('#countdownToast').addClass('d-none');
+
 
                         console.log(exists ? "La cookie existe." : "La cookie no existe.");
                     }
@@ -292,6 +297,15 @@ let checkOut = {
                     // Mostrar el modal de confirmación
                     showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tiene 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
 
+                    // Iniciar el contador después de que el toast se haya mostrado
+                    setTimeout(function() {
+                        var countdownElement = document.getElementById('countdownToast');
+                        if (countdownElement) {
+                            $('#countdownToast').removeClass('d-none');
+                            startCountdown(10 * 60, countdownElement);
+                        }
+                    }, 500); // Aumenta el tiempo de espera a 500ms para asegurar que el toast esté en el DOM
+
 
                     // Cerrar el OffCanvas
                     var offcanvasElement = document.getElementById('offcanvasEvento');
@@ -306,6 +320,29 @@ let checkOut = {
                     document.querySelector('#confirmationModal .modal-body').innerHTML = message;
                     confirmationModal.show();
                 }
+
+
+                function startCountdown(duration, display) {
+                    var timer = duration, minutes, seconds;
+                    clearInterval(countdownInterval); // Clear any existing interval
+                    countdownInterval = setInterval(function() {
+                        minutes = parseInt(timer / 60, 10);
+                        seconds = parseInt(timer % 60, 10);
+
+                        minutes = minutes < 10 ? "0" + minutes : minutes;
+                        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                        display.textContent = 'Tiempo restante ' + minutes + ":" + seconds;
+
+                        if (--timer < 0) {
+                            clearInterval(countdownInterval);
+                            display.textContent = "Tiempo agotado";
+                            // Aquí puedes agregar lógica adicional cuando el tiempo se agote
+                        }
+                    }, 1000);
+                }
+
+
             });          
         }
 

@@ -1,6 +1,22 @@
 <x-app-layout>
 
     <div class="row">
+
+        {{-- <div id="countdownToast" class="position-fixed-top-center  align-items-center text-white bg-primary border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true"> --}}
+
+        <!-- Contenedor del Toast -->
+        <div id="countdownToast" class="toast-container position-fixed-top-center text-white bg-info p-6 d-none" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast align-items-center text-white bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div id="countdownToastBody" class="toast-body">
+                        <!-- El contenido del toast se actualizará dinámicamente -->
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+
         <div class="col-xl-8">
             <div class="card">
                 <div class="card-body checkout-tab">
@@ -241,6 +257,19 @@
         color: white !important;
         border-color: red !important;
         opacity: 0.7;
+    }
+
+
+    .position-fixed-top-center {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1055;
+    }
+
+    .toast-container {
+        max-width: 400px; /* Ajusta el ancho máximo del toast */
     }
 
 </style>
