@@ -295,7 +295,7 @@ let checkOut = {
 
 
                     // Mostrar el modal de confirmación
-                    showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tiene 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
+                    showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tienes 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
 
                     // Iniciar el contador después de que el toast se haya mostrado
                     setTimeout(function() {
