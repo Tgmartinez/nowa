@@ -167,25 +167,8 @@ let checkOut = {
 
                     var events = calendar.getEvents();
 
-                    if (info.event.title === 'Lleno') {
-                        var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(new Date(info.event.startStr));
-                        toastr.error(`No se puede seleccionar el ${formattedDate}.`, 'Error');
-                        return;
-                    }
-
-                    selectedDate = info.event.start.toISOString().split('T')[0];
-
-                    selectedDate = info.event.start.toISOString().split('T')[0];
-                    var offcanvasElement = document.getElementById('offcanvasEvento');
-                    var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
-                    offcanvas.show();
-
-                },
-                dateClick: function(info) {
-                    console.log("2", info);
-
                     // Uso de la función
-                    var exists = checkCookie("nombreUsuario");
+                    var exists = checkCookie("fechaSeleccionado");
 
                     if(exists && selectedLabel){
                         selectedLabel.classList.remove('bg-danger', 'text-white');
@@ -203,10 +186,45 @@ let checkOut = {
                         // Quitar el contador.
                         $('#countdownToast').addClass('d-none');
 
+                        console.log(exists ? "La cookie existe." : "La cookie no existe.");
+                    }
+                    if (info.event.title === 'Lleno') {
+                        var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(new Date(info.event.startStr));
+                        toastr.error(`No se puede seleccionar el ${formattedDate}.`, 'Error');
+                        return;
+                    }
+
+                    selectedDate = info.event.start.toISOString().split('T')[0];
+
+                    selectedDate = info.event.start.toISOString().split('T')[0];
+                    var offcanvasElement = document.getElementById('offcanvasEvento');
+                    var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                    offcanvas.show();
+
+                },
+                dateClick: function(info) {
+
+                    // Uso de la función
+                    var exists = checkCookie("fechaSeleccionado");
+
+                    if(exists && selectedLabel){
+                        selectedLabel.classList.remove('bg-danger', 'text-white');
+                        selectedLabel.querySelector('input').disabled = false;
+                        selectedLabel.innerHTML = selectedLabel.innerHTML.replace(' (Ocupado)', '');
+
+                        // Eliminar eventos excepto los que tienen la clase 'Lleno'
+                        calendar.getEvents().forEach(function(event) {
+                                console.log("event.classNames", event.classNames);
+                            if (!event.classNames.includes('Lleno')) {
+                                event.remove();
+                            }
+                        });
+
+                        // Quitar el contador.
+                        $('#countdownToast').addClass('d-none');
 
                         console.log(exists ? "La cookie existe." : "La cookie no existe.");
                     }
-
 
                     // Verificar si hay un evento de "Lleno" en la fecha seleccionada
                     var events = calendar.getEvents();
@@ -219,7 +237,6 @@ let checkOut = {
                         toastr.error(`No se puede seleccionar el ${formattedDate}.`);
                         return;
                     }
-
 
                     // Si se selecciona una nueva fecha, restablecer el calendario y el formulario
                     if (selectedDate && selectedDate !== info.dateStr) {
@@ -240,21 +257,24 @@ let checkOut = {
                 var form = document.getElementById('agendarCitaForm');
                 var formData = new FormData(form);
                 var hora = formData.get('hora');
-                var titulo = 'Cita';
+                var titulo = 'Agendar';
 
                 console.log('Formulario enviado:', Object.fromEntries(formData.entries()));
 
-                // document.cookie = "nombreUsuario=Juan; expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/";
-                
-                document.cookie = "nombreUsuario=Juan";
-
+                document.cookie = "fechaSeleccionado=ok";
 
                 if (selectedDate && hora) {
-                    // Agregar evento al calendario
+                    // Calcular la hora de fin
+                    var startHour = parseInt(hora.split(':')[0]);
+                    var endHour = startHour + 2;
+                    var endHourFormatted = endHour < 10 ? '0' + endHour + ':00' : endHour + ':00';
+                    var endTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${endHourFormatted}:00`));
+                    var startTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${hora}:00`));
                     calendar.addEvent({
-                        title: titulo,
+                        title: `${startTime} - ${endTime} (${titulo})`,
                         start: selectedDate + 'T' + hora,
-                        allDay: false
+                        allDay: false,
+                        classNames: ['text-success']  // Agregar la clase personalizada
                     });
 
                     // Limpiar la clase de la selección anterior
@@ -269,8 +289,6 @@ let checkOut = {
                     selectedLabel.classList.add('bg-danger', 'text-white');
                     selectedLabel.querySelector('input').disabled = true;
                     selectedLabel.append(' (Ocupado)');
-
-
 
                     // Calcular la diferencia en días
                     var today = new Date();
@@ -293,7 +311,6 @@ let checkOut = {
                     var formattedTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${hora}:00`));
                     var formattedDateTime = `<strong style="color: green;">${formattedDate} a las ${formattedTime}</strong> (${daysText})`;
 
-
                     // Mostrar el modal de confirmación
                     showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tienes 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
 
@@ -305,7 +322,6 @@ let checkOut = {
                             startCountdown(10 * 60, countdownElement);
                         }
                     }, 500); // Aumenta el tiempo de espera a 500ms para asegurar que el toast esté en el DOM
-
 
                     // Cerrar el OffCanvas
                     var offcanvasElement = document.getElementById('offcanvasEvento');
@@ -320,7 +336,6 @@ let checkOut = {
                     document.querySelector('#confirmationModal .modal-body').innerHTML = message;
                     confirmationModal.show();
                 }
-
 
                 function startCountdown(duration, display) {
                     var timer = duration, minutes, seconds;
@@ -341,7 +356,6 @@ let checkOut = {
                         }
                     }, 1000);
                 }
-
 
             });          
         }
@@ -482,17 +496,21 @@ let checkOut = {
         // Set event to validate before moving to the next step
         $("#smartwizardCheckOut").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
 
-            if (stepDirection === 1) {
-                return $("#form_check_out").valid();
-            }else{
+            if (stepDirection === 0) {
+                $(".sw-toolbar-elm #comprar-checkout").addClass('d-none');
                 $(".sw-toolbar-elm .sw-btn-next").removeClass('d-none');
+                return $("#form_check_out").valid();
+            }
+
+            if (stepDirection === 1) {
+                $(".sw-toolbar-elm #comprar-checkout").addClass('d-none');
+                $(".sw-toolbar-elm .sw-btn-next").removeClass('d-none');
+                return $("#form_check_out").valid();
             }
 
             if (stepDirection === 2) {
                 $(".sw-toolbar-elm .sw-btn-next").addClass('d-none');
                 $(".sw-toolbar-elm #comprar-checkout").removeClass('d-none');
-            }else{
-                $(".sw-toolbar-elm #comprar-checkout").addClass('d-none');
             }
 
             return true;

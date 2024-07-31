@@ -272,4 +272,8 @@
         max-width: 400px; /* Ajusta el ancho máximo del toast */
     }
 
+    .fc .fc-event-time {
+        display: none;
+    }
+
 </style>
