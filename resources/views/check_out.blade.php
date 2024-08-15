@@ -16,11 +16,11 @@
             </div>
         </div>
 
-
         <div class="col-xl-8">
             <div class="card">
                 <div class="card-body checkout-tab">
                     <form action="#form_check_out" id="form_check_out" method="post">
+
                         <div id="smartwizardCheckOut">
                             <ul class="nav">
                                 <li class="nav-item">
@@ -57,6 +57,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div id="step-2" class="tab-pane" role="tabpanel">
                                     <div>
                                         <h5 class="mb-1">Informacion del taller</h5>
@@ -83,6 +84,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div id="step-3" class="tab-pane" role="tabpanel">
                                     <div class="d-flex align-items-center mb-2">
                                         <div class="flex-grow-1">
@@ -93,6 +95,11 @@
                                         <div class="card p-4 border shadow-none mb-0 mt-4">
                                             <ul class="badge-type-selection__list">
                                                 
+                                                {{-- ////////////////////////////////////////////////////////// --}}
+                                                {{-- Función para mostrar las tarjetas del cliente --}}
+                                                {{-- fn_customerConnekta    //JS --}}
+                                                {{-- fn_getCustomerConekta  //PHP --}}
+                                                {{-- ////////////////////////////////////////////////////////// --}}
                                                 <div id="DivCustomerConekta"></div>
 
                                                 <li class="add-card-new ui-list__item modal-effect" id="add_new_cliente_conekta" data-bs-effect="effect-slide-in-bottom" data-bs-toggle="modal" data-bs-target="#modalFormIUclienteConekta">
@@ -116,6 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <input type="hidden" name="customer_id" id="customer_id">
@@ -142,6 +150,8 @@
         <div class="offcanvas-body">
             <p id="eventDetails">Estos son los horarios disponibles...</p>
 
+            {{-- Formulario que se ocupa mostrar los horarios disponibles segun la fecha --}}
+
             <form id="agendarCitaForm">
                 <div class="mb-3">
                     <label for="hora" class="form-label">Hora</label>
@@ -149,8 +159,8 @@
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="radio" name="hora" value="08:00" required> 08:00 AM - 10:00 AM
                         </label>
-                        <label class="list-group-item bg-danger text-white">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="10:00" disabled> 10:00 AM - 12:00 PM (Ocupado)
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" name="hora" value="10:00"> 10:00 AM - 12:00 PM
                         </label>
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="radio" name="hora" value="12:00" required> 12:00 PM - 02:00 PM
@@ -158,8 +168,8 @@
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="radio" name="hora" value="14:00" required> 02:00 PM - 04:00 PM
                         </label>
-                        <label class="list-group-item bg-danger text-white">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="16:00" disabled> 04:00 PM - 06:00 PM (Ocupado)
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" name="hora" value="16:00"> 04:00 PM - 06:00 PM
                         </label>
                     </div>
                 </div>
