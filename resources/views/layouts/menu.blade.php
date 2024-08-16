@@ -67,4 +67,10 @@
         <span class="side-menu__label">Logs</span>
     </a>
 </li>
+<li class="slide">
+    <a href="citas" class="side-menu__item">
+        <i class="material-icons side-menu__icon">event</i>
+        <span class="side-menu__label">Citas</span>
+    </a>
+</li>
 <!-- End::slide -->

@@ -218,3 +218,22 @@ Route::get('get_empleados_diez', [EmpleadosController::class, 'get_empleados_die
 Route::get('descargar_plantilla_empleados', [EmpleadosController::class, 'descargar_plantilla_empleados']);
 Route::get('validar_existencia_empleados', [EmpleadosController::class, 'validar_existencia_empleados']);
 
+
+use App\Http\Controllers\CitasController;
+Route::get('citas', [CitasController::class, 'index'])->middleware('auth') ;
+Route::post('set_citas', [CitasController::class, 'set_citas']);
+Route::post('set_import_citas', [CitasController::class, 'set_import_citas']);
+Route::post('get_citas_by_id', [CitasController::class, 'get_citas_by_id']);
+Route::post('delete_citas', [CitasController::class, 'delete_citas']);
+Route::post('undo_delete_citas', [CitasController::class, 'undo_delete_citas']);
+Route::get('get_citas_datatable', [CitasController::class, 'get_citas_datatable']);
+Route::post('truncate_citas', [CitasController::class, 'truncate_citas']);
+Route::post('truncate_sps_citas', [CitasController::class, 'truncate_sps_citas']);
+Route::post('form_importar_citas', [CitasController::class, 'form_importar_citas']);
+Route::get('export_excel_citas', [CitasController::class, 'export_excel_citas']);
+Route::post('get_cat_citas', [CitasController::class, 'get_cat_citas']);
+Route::post('get_citas_by_list', [CitasController::class, 'get_citas_by_list']);
+Route::get('get_citas_diez', [CitasController::class, 'get_citas_diez']);
+Route::get('descargar_plantilla_citas', [CitasController::class, 'descargar_plantilla_citas']);
+Route::get('validar_existencia_citas', [CitasController::class, 'validar_existencia_citas']);
+
