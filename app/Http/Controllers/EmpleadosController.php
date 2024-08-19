@@ -155,7 +155,8 @@ class EmpleadosController extends Controller
             return json_encode(array("b_status"=> false, "vc_message" => "No se encontro la tabla empleados"));
         }
 
-        $data=[ 'nombre' => isset($request->nombre)? $request->nombre:"",
+        $data=[ 'id_user' => Auth::user()->id,
+                'nombre' => isset($request->nombre)? $request->nombre:"",
                 'direccion' => isset($request->direccion)? $request->direccion: "",
                 'telefono' => isset($request->telefono)? $request->telefono: "",
                 'email' => isset($request->email)? $request->email: "",

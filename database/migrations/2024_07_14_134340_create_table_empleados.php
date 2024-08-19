@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::connection('mysql')->create('empleados', function (Blueprint $table) {
             $table->id();
 
+            $table->string('id_user', 255);
             $table->string('nombre', 255);
             $table->string('direccion', 255)->nullable();
             $table->string('telefono', 50)->nullable();

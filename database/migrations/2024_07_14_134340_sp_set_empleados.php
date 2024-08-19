@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::connection('mysql')->getConnection()->statement('
             CREATE PROCEDURE sp_set_empleados(IN `v_id` BIGINT(20)
+                                                              , IN `v_id_user` VARCHAR(200)
                                                               , IN `v_nombre` VARCHAR(200)
                                                               , IN `v_direccion` VARCHAR(210)
                                                               , IN `v_telefono` VARCHAR(220)
@@ -33,7 +34,8 @@ return new class extends Migration
                 SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
                 UPDATE empleados 
-                  SET nombre   = v_nombre
+                  SET id_user   = v_id_user
+                    , nombre   = v_nombre
                     , direccion   = v_direccion
                     , telefono   = v_telefono
                     , email   = v_email
