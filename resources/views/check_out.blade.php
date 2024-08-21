@@ -150,6 +150,7 @@
         <div class="offcanvas-body">
             <p id="eventDetails">Estos son los horarios disponibles...</p>
 
+
             {{-- Formulario que se ocupa mostrar los horarios disponibles segun la fecha --}}
 
             <form id="agendarCitaForm">
@@ -157,7 +158,7 @@
                     <label for="hora" class="form-label">Hora</label>
                     <div class="list-group" id="hora-list">
                         <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="08:00" required> 08:00 AM - 10:00 AM
+                            <input class="form-check-input me-1" type="radio" name="hora" value="8:00" required> 08:00 AM - 10:00 AM
                         </label>
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="radio" name="hora" value="10:00"> 10:00 AM - 12:00 PM
@@ -179,7 +180,7 @@
     </div>
 
     <!-- Modal de confirmación -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal fade" tabindex="-1" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">

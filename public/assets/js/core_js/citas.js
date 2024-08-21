@@ -71,10 +71,10 @@ let citas = {
                 "type": "GET",
                 "data": function(d) {
                     d.buscar_id_empleado = $('#buscar_id_empleado').val();
+                    d.buscar_id_cliente = $('#buscar_id_cliente').val();
                     d.buscar_fecha_cita = $('#buscar_fecha_cita').val();
                     d.buscar_hora_inicio = $('#buscar_hora_inicio').val();
                     d.buscar_hora_fin = $('#buscar_hora_fin').val();
-                    d.buscar_id_cliente = $('#buscar_id_cliente').val();
                     d.buscar_estado = $('#buscar_estado').val();
                     // Añade aquí más datos de búsqueda si es necesario
                 },
@@ -126,37 +126,14 @@ let citas = {
             fnDrawCallback: function( oSettings ) {
                 $('[data-toggle="tooltip"]').tooltip();
             },
-            // "dom": 'Brtip',
-            // buttons: [
-            //     {
-            //         extend: 'excel',
-            //         title: 'Reporte citas',
-            //         className: 'btn header-item noti-icon btn-personalizado-xlxs',
-            //         excelStyles: {
-            //             template: 'blue_medium',
-            //         },
-            //     },
-            // ],
-            // "buttons": [
-            //     {
-            //         "extend": 'excel',
-            //         "title": 'Reporte citas',
-            //         "className": 'btn header-item noti-icon btn-personalizado-xlxs',
-            //         "excelStyles": {
-            //             "template": 'blue_medium',
-            //         },
-            //     },
-            // ],
-
-            // "order": [[0, "asc"]],
 
             "columns": [
                 { "data": "id", visible: true},
                 { "data": "id_empleado", class: "id_empleado", visible: true },
+                { "data": "id_cliente", class: "id_cliente", visible: true },
                 { "data": "fecha_cita", class: "fecha_cita", visible: true },
                 { "data": "hora_inicio", class: "hora_inicio", visible: true },
                 { "data": "hora_fin", class: "hora_fin", visible: true },
-                { "data": "id_cliente", class: "id_cliente", visible: true },
                 { "data": "estado", class: "estado", visible: true },
             ],
 

@@ -143,11 +143,12 @@ class CitasController extends Controller
             return json_encode(array("b_status"=> false, "vc_message" => "No se encontro la tabla citas"));
         }
 
-        $data=[ 'id_empleado' => isset($request->id_empleado)? $request->id_empleado:"",
+        $data=[ 'id_user' => isset($request->id_user)? $request->id_user:"",
+                'id_empleado' => isset($request->id_empleado)? $request->id_empleado:"",
+                'id_cliente' => isset($request->id_cliente)? $request->id_cliente: "",
                 'fecha_cita' => isset($request->fecha_cita)? $request->fecha_cita: "",
                 'hora_inicio' => isset($request->hora_inicio)? $request->hora_inicio: "",
                 'hora_fin' => isset($request->hora_fin)? $request->hora_fin: "",
-                'id_cliente' => isset($request->id_cliente)? $request->id_cliente: "",
                 'estado' => isset($request->estado)? $request->estado: "",
         ];
 
@@ -600,5 +601,88 @@ class CitasController extends Controller
     {
         // Eliminar el SP
         DB::unprepared('DROP PROCEDURE IF EXISTS `sp_get_citas` ');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Revisar si existe horario disponible
+    |--------------------------------------------------------------------------
+    | 
+    | @return json
+    |
+    */
+    public function get_cita_disponible(Request $request)
+    {
+        $diaSeleccionado  = $request->diaSeleccionado;
+        $fechaSeleccionado= $request->fechaSeleccionado;
+
+        // Validar si el dia est disponible
+        $validarDiaDisponible = $this->validarDiaDisponible($request);
+        if( !$validarDiaDisponible )
+            return response()->json(['b_status' => false, 'vc_message' => 'No disponible esta fecha '. $diaSeleccionado ]);
+
+        // Obtener los IDs de usuarios
+        $idUsers = DB::table('empleados')
+                    ->pluck('id_user')
+                    ->toArray();
+
+        // Obtener los IDs de empleados
+        $idEmpleados = DB::table('citas')
+                        ->where('fecha_cita', $fechaSeleccionado)
+                        ->where('b_status', 1)
+                        ->pluck('id_empleado')
+                        ->toArray();
+
+        $contadorIndependiente = count($idUsers); // Ejemplo de contador inicial
+
+        // Comparar si los dos arreglos son iguales
+        $sonIguales = empty(array_diff($idUsers, $idEmpleados)) && empty(array_diff($idEmpleados, $idUsers));
+
+        if (!$sonIguales) {
+            $horariosOcupados = DB::table('citas')
+                                ->where('fecha_cita', $fechaSeleccionado)
+                                ->where('b_status', 1)
+                                ->select('id_empleado', 'hora_inicio', 'hora_fin')
+                                ->get();
+        }else{
+
+            $horariosOcupados = DB::table('citas')
+                ->where('fecha_cita', $fechaSeleccionado)
+                ->select('hora_inicio', DB::raw('COUNT(id_empleado) as total'))
+                ->groupBy('hora_inicio')
+                ->get()
+                ->map(function ($item) use (&$contadorIndependiente) {
+                    $item->contador = $contadorIndependiente;
+                    return $item;
+                });
+
+        }
+
+        return response()->json(['horariosOcupados' => $horariosOcupados]);
+
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Revisar si existe horario disponible
+    |--------------------------------------------------------------------------
+    | 
+    | @return json
+    |
+    */
+    public function validarDiaDisponible(Request $request)
+    {
+        // Dia seleccionado
+        $diaSeleccionado  = $request->diaSeleccionado;
+
+        // Buscamos si hay un dia disponible
+        return DB::table('horarios')
+                            ->where('dia', $diaSeleccionado)
+                            ->where('cerrada', 0)
+                            ->exists();
     }
 }

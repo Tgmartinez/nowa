@@ -54,10 +54,10 @@
                                             <tr>
                                                 <th style="width: 5%">ID</th>
                                                 <th>Empleado ID</th>
+                                                <th>Cliente ID</th>
                                                 <th>Fecha de Cita</th>
                                                 <th>Hora de Inicio</th>
                                                 <th>Hora de Fin</th>
-                                                <th>Cliente ID</th>
                                                 <th>Estado</th>
                                                 <th style="width: 9%">Acción</th>
                                             </tr>
@@ -66,10 +66,10 @@
                                             <tr>
                                                 <th></th>
                                                 <th class="id_empleado"><input type="text" id="buscar_id_empleado" placeholder="Buscar por Empleado ID"></th>
+                                                <th class="id_cliente"><input type="text" id="buscar_id_cliente" placeholder="Buscar por Cliente ID"></th>
                                                 <th class="fecha_cita"><input type="text" id="buscar_fecha_cita" placeholder="Buscar por Fecha de Cita"></th>
                                                 <th class="hora_inicio"><input type="text" id="buscar_hora_inicio" placeholder="Buscar por Hora de Inicio"></th>
                                                 <th class="hora_fin"><input type="text" id="buscar_hora_fin" placeholder="Buscar por Hora de Fin"></th>
-                                                <th class="id_cliente"><input type="text" id="buscar_id_cliente" placeholder="Buscar por Cliente ID"></th>
                                                 <th class="estado"><input type="text" id="buscar_estado" placeholder="Buscar por Estado"></th>
                                                 <th></th>
                                             </tr>

@@ -16,11 +16,19 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-sm-12">
+                            <label for="id_user" class="form-label">User ID</label>
+                            <input type="text" class="form-control" id="id_user" name="id_user" placeholder="Escribe el ID del User">
+                        </div>
+                        <div class="col-sm-12">
                             <label for="id_empleado" class="form-label">Empleado ID</label>
                             <input type="text" class="form-control" id="id_empleado" name="id_empleado" placeholder="Escribe el ID del Empleado">
                         </div>
                         <div class="col-sm-12 d-none tipo-ya-existe">
                             <span class="badge bg-danger text-uppercase">Este registro ya existe</span>
+                        </div>
+                        <div class="col-12">
+                            <label for="id_cliente" class="form-label">Cliente ID</label>
+                            <input type="text" class="form-control" id="id_cliente" name="id_cliente" placeholder="Escribe el ID del Cliente">
                         </div>
                         <div class="col-sm-12">
                             <label for="fecha_cita" class="form-label">Fecha de Cita</label>
@@ -33,10 +41,6 @@
                         <div class="col-12">
                             <label for="hora_fin" class="form-label">Hora de Fin</label>
                             <input type="text" class="form-control" id="hora_fin" name="hora_fin" placeholder="Escribe la Hora de Fin">
-                        </div>
-                        <div class="col-12">
-                            <label for="id_cliente" class="form-label">Cliente ID</label>
-                            <input type="text" class="form-control" id="id_cliente" name="id_cliente" placeholder="Escribe el ID del Cliente">
                         </div>
                         <div class="col-12">
                             <label for="estado" class="form-label">Estado</label>

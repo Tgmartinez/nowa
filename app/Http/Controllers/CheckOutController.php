@@ -103,8 +103,18 @@ class CheckOutController extends Controller
     public function fnCreateOrder(Request $request)
     {
 
+        // Fecha seleccioando
+        $fechaSeleccionado= $request->fechaSeleccionado;
+
+        // Revisar si hay un empleado disponible // Fecha seleccioando - Hora seleccionado
+        $id_empleado= $this->empleadoDisponible($request);
+        if (is_null($id_empleado)){
+            return json_encode(array("b_status"=> false, "vc_message" => 'Fecha y hora seleccionado ha llegado al cupo maximo' ));
+        }
+
+        // Revisar que haya seleccionado una tarjeta
         if (!isset($request->customer_id) || empty($request->customer_id)){
-                return json_encode(array("b_status"=> false, "vc_message" =>'Favor de seleccionar una Tarjeta'  ));
+            return json_encode(array("b_status"=> false, "vc_message" =>'Favor de seleccionar una Tarjeta'  ));
         }
 
         try {
@@ -133,6 +143,15 @@ class CheckOutController extends Controller
             ];
 
             $order = $this->conektaService->createOrder($orderData);
+
+            $inserted = DB::table('citas')->insert([
+                'id_empleado' => $id_empleado,
+                'id_cliente' => Auth::user()->id,
+                'fecha_cita' => $fechaSeleccionado,
+                'hora_inicio' => $request->hora_inicio,
+                'hora_fin' => $request->hora_fin,
+            ]);
+
             $this->LibCore->setLogs( ['event_type'=> 'fnCreateOrder' , 'context'=> 'data', 'event_data' => json_encode($orderData) ] );
             $this->LibCore->setLogs( ['event_type'=> 'fnCreateOrder' , 'context'=> 'request', 'event_data' => json_encode($order) ] );
 
@@ -148,6 +167,52 @@ class CheckOutController extends Controller
         
         return json_encode(array("b_status"=> false, "vc_message" => 'Ocurrio un error'));
 
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Buscar el empleado disponible
+    |--------------------------------------------------------------------------
+    | 
+    | @return json
+    |
+    */
+
+    public function empleadoDisponible(Request $request)
+    {
+        // array:8 [ // app/Http/Controllers/CheckOutController.php:183
+        //   "shippingAddress" => "on"
+        //   "selected_card" => array:1 [
+        //     0 => "src_2wSK9DvGMXSWkn7nJ"
+        //   ]
+        //   "customer_id" => "cus_2wSK9DvGMXSWkn7nD"
+        //   "card_id" => "src_2wSK9DvGMXSWkn7nJ"
+        //   "id_producto" => "eyJpdiI6ImdGbEVucGZ3MjF5cTF6anB0KzF3b2c9...."
+        //   "fechaSeleccionado" => "2024-08-29"
+        //   "hora_inicio" => "8:00"
+        //   "hora_fin" => "10:00"
+        // ]  
+
+        $fechaSeleccionado= $request->fechaSeleccionado;
+        $hora_inicio= $request->hora_inicio;
+        $hora_fin= $request->hora_fin;
+
+        // Obtener mis empleados
+        $idUsers = DB::table('empleados')->pluck('id_user')->values()->all();
+
+        // Obtener los IDs de empleados ocupados en la fecha y horario especificados desde la tabla citas
+        $idUsersOcupados = DB::table('citas')
+                             ->where('fecha_cita', $fechaSeleccionado)
+                             ->where('hora_inicio', $hora_inicio)
+                             ->where('hora_fin', $hora_fin)
+                             ->pluck('id_empleado')
+                             ->values()
+                             ->all();
+
+        // Encontrar el primer ID en $idUsers que no esté en $idUsersOcupados
+        $primerIdDisponible = collect($idUsers)->diff($idUsersOcupados)->first();
+
+        return $primerIdDisponible;
     }
 
     /*

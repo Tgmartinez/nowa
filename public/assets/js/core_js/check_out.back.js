@@ -16,7 +16,7 @@ let checkOut = {
         // Obtener lista para pagar
         checkOut.fn_customerConnekta();
 
-        //Crear la oreden
+        //Crear la Orden
         checkOut.fn_fnCreateOrder();
 
         // 
@@ -44,7 +44,6 @@ let checkOut = {
     },
 
     fn_customerConnekta: function () {
-
         $.ajax({
             url: "fn_getCustomerConekta",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -138,6 +137,7 @@ let checkOut = {
         if (!mostrarDomingos) hiddenDays.push(0); // 0 representa el domingo
 
         function initializeCalendar() {
+
             var calendarEl = document.getElementById('agendar_cita_automotriz');
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -175,26 +175,29 @@ let checkOut = {
                     var events = calendar.getEvents();
 
                     // Uso de la función
-                    var exists = checkCookie("fechaSeleccionado");
+                    // var exists = checkCookie("fechaSeleccionado");
 
-                    if(exists && selectedLabel){
-                        selectedLabel.classList.remove('bg-danger', 'text-white');
-                        selectedLabel.querySelector('input').disabled = false;
-                        selectedLabel.innerHTML = selectedLabel.innerHTML.replace(' (Ocupado)', '');
+                    // if(exists && selectedLabel){
+                    //     selectedLabel.classList.remove('bg-danger', 'text-white');
+                    //     selectedLabel.querySelector('input').disabled = false;
+                    //     selectedLabel.innerHTML = selectedLabel.innerHTML.replace(' (Ocupado)', '');
 
-                        // Eliminar eventos excepto los que tienen la clase 'Lleno'
-                        calendar.getEvents().forEach(function(event) {
-                                console.log("event.classNames", event.classNames);
-                            if (!event.classNames.includes('Lleno')) {
-                                event.remove();
-                            }
-                        });
+                    //     // Eliminar eventos excepto los que tienen la clase 'Lleno'
+                    //     calendar.getEvents().forEach(function(event) {
+                    //             console.log("event.classNames", event.classNames);
+                    //         if (!event.classNames.includes('Lleno')) {
+                    //             event.remove();
+                    //         }
+                    //     });
 
-                        // Quitar el contador.
-                        $('#countdownToast').addClass('d-none');
+                    //     // Quitar el contador.
+                    //     $('#countdownToast').addClass('d-none');
 
-                        console.log(exists ? "La cookie existe." : "La cookie no existe.");
-                    }
+                    //     console.log(exists ? "La cookie existe." : "La cookie no existe.");
+                    // }
+
+                    console.log("0", info);
+
                     if (info.event.title === 'Lleno') {
                         var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(new Date(info.event.startStr));
                         toastr.error(`No se puede seleccionar el ${formattedDate}.`, 'Error');
@@ -210,27 +213,26 @@ let checkOut = {
 
                 },
                 dateClick: function(info) {
-
                     //=================================================
                     // Obtener el día seleccionado
-                    var selectedDatePersonalizado = info.date;
+                    var selectedDate = info.date;
 
                     // Formatear la fecha en yyyy-mm-dd
-                    var year = selectedDatePersonalizado.getFullYear();
-                    var month = ('0' + (selectedDatePersonalizado.getMonth() + 1)).slice(-2); // Agregar ceros iniciales si es necesario
-                    var day = ('0' + selectedDatePersonalizado.getDate()).slice(-2); // Agregar ceros iniciales si es necesario
+                    var year = selectedDate.getFullYear();
+                    var month = ('0' + (selectedDate.getMonth() + 1)).slice(-2); // Agregar ceros iniciales si es necesario
+                    var day = ('0' + selectedDate.getDate()).slice(-2); // Agregar ceros iniciales si es necesario
 
                     // Fecha que se esta seleccionado en el calendario
                     var fechaSeleccionado = `${year}-${month}-${day}`;
 
                     //=================================================
                     // Obtener el día de la semana en formato textual
-                    var dayOfWeek = selectedDatePersonalizado.toLocaleDateString('es-ES', { weekday: 'long' });
+                    var dayOfWeek = selectedDate.toLocaleDateString('es-ES', { weekday: 'long' });
 
                     // Convertir a formato Camel Case
                     var diaSeleccionado = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1).toLowerCase();
 
-                    // =================================================
+                    //=================================================
                     // Obtener los horarios disponible 
                     $.ajax({
                         url: "get_cita_disponible",
@@ -240,35 +242,8 @@ let checkOut = {
                         type: 'POST',
                         success: function (response) {
 
-                            // Asegúrate de que la respuesta contiene "horariosOcupados"
-                            if (response.horariosOcupados && response.horariosOcupados.length > 0) {
-
-                                // Recorrer los valores de "horariosOcupados"
-                                response.horariosOcupados.forEach(function(horario) {
-                                    // Deshabilitar las opciones que coinciden con "hora_inicio"
-                                    $('input[name="hora"]').each(function() {
-
-                                        if ($(this).val() === horario.hora_inicio && horario.total == horario.contador) {
-                                            $(this).attr('disabled', true);
-                                            $(this).closest('label').addClass('bg-danger text-white');
-                                        }
-                                    });
-                                });
-                            }else{
-
-                                // Habilitar las opciones que coinciden con "hora_inicio"
-                                $('input[name="hora"]').each(function() {
-                                    $(this).attr('disabled', false);
-                                    $(this).closest('label').removeClass('bg-danger text-white');
-                                });                                
-                            }
-
-                            // RECORRER VALORES
-                            if ($('#fechaSeleccionado').length){
-                                $('#form_check_out #fechaSeleccionado').remove();
-                            }
-
-                            $('#form_check_out').append('<input type="text" id="fechaSeleccionado" name="fechaSeleccionado" value="'+fechaSeleccionado+'"> ');
+                            let arrCitas= response['citas'];
+                            console.log("arrCitas", arrCitas);
 
                         },
                         error: function (response) {
@@ -276,30 +251,27 @@ let checkOut = {
                         }
                     });
 
-                    //=================================================
-                    // FIN Obtener el día seleccionado
-
                     // Uso de la función
-                    var exists = checkCookie("fechaSeleccionado");
+                    // var exists = checkCookie("fechaSeleccionado");
 
-                    if(exists && selectedLabel){
-                        selectedLabel.classList.remove('bg-danger', 'text-white');
-                        selectedLabel.querySelector('input').disabled = false;
-                        selectedLabel.innerHTML = selectedLabel.innerHTML.replace(' (Ocupado)', '');
+                    // if(exists && selectedLabel){
+                    //     selectedLabel.classList.remove('bg-danger', 'text-white');
+                    //     selectedLabel.querySelector('input').disabled = false;
+                    //     selectedLabel.innerHTML = selectedLabel.innerHTML.replace(' (Ocupado)', '');
 
-                        // Eliminar eventos excepto los que tienen la clase 'Lleno'
-                        calendar.getEvents().forEach(function(event) {
-                                console.log("event.classNames", event.classNames);
-                            if (!event.classNames.includes('Lleno')) {
-                                event.remove();
-                            }
-                        });
+                    //     // Eliminar eventos excepto los que tienen la clase 'Lleno'
+                    //     calendar.getEvents().forEach(function(event) {
+                    //             console.log("event.classNames", event.classNames);
+                    //         if (!event.classNames.includes('Lleno')) {
+                    //             event.remove();
+                    //         }
+                    //     });
 
-                        // Quitar el contador.
-                        $('#countdownToast').addClass('d-none');
+                    //     // Quitar el contador.
+                    //     $('#countdownToast').addClass('d-none');
 
-                        console.log(exists ? "La cookie existe." : "La cookie no existe.");
-                    }
+                    //     console.log(exists ? "La cookie existe." : "La cookie no existe.");
+                    // }
 
                     // Verificar si hay un evento de "Lleno" en la fecha seleccionada
                     var events = calendar.getEvents();
@@ -315,7 +287,7 @@ let checkOut = {
 
                     // Si se selecciona una nueva fecha, restablecer el calendario y el formulario
                     if (selectedDate && selectedDate !== info.dateStr) {
-                        // document.getElementById('agendarCitaForm').reset();
+                        document.getElementById('agendarCitaForm').reset();
                     }
 
                     selectedDate = info.dateStr;
@@ -351,18 +323,6 @@ let checkOut = {
                         allDay: false,
                         classNames: ['text-success']  // Agregar la clase personalizada
                     });
-
-                    if ($('#form_check_out #hora_inicio').length){
-                        $('#form_check_out #hora_inicio').remove();
-                    }
-
-                    $('#form_check_out').append('<input type="text" id="hora_inicio" name="hora_inicio" value="'+startTime+'"> ');
-
-                    if ($('#form_check_out #hora_fin').length){
-                        $('#form_check_out #hora_fin').remove();
-                    }
-
-                    $('#form_check_out').append('<input type="text" id="hora_inicio" name="hora_fin" value="'+endTime+'"> ');
 
                     // Limpiar la clase de la selección anterior
                     if (selectedLabel) {
@@ -513,13 +473,11 @@ let checkOut = {
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'POST',
                     success: function (response) {
-                        console.log("response", response);
 
                         let json ='';
                         try {
                             json = JSON.parse(response);
                         } catch (e) {
-                            $loading.waitMe('hide');
                             console.log("response", response);
                             return;
                         }
