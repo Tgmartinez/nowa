@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\checkOut;
 use App\Lib\LibCore;
 use Session;
+use App\Models\Citas;
 
 class CheckOutController extends Controller
 {

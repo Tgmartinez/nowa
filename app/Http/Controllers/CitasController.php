@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\citas;
+use App\Models\Citas;
 use App\Lib\LibCore;
 use Session;
 
@@ -684,5 +684,50 @@ class CitasController extends Controller
                             ->where('dia', $diaSeleccionado)
                             ->where('cerrada', 0)
                             ->exists();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Llenar fecha con horarios apartados!
+    |--------------------------------------------------------------------------
+    | 
+    | @return json
+    |
+    */
+    public function horarasSeleccionados(Request $request)
+    {
+        // Llamada al procedimiento almacenado para obtener los horarios ocupados
+        $results = DB::select('CALL sp_get_horarios_ocupados()');
+
+        // Consulta para saber el número máximo de empleados disponibles
+        $totalEmpleados = DB::table('empleados')
+                            ->select(DB::raw('COUNT(id_user) as totalMaximo'))
+                            ->where('b_status', 1)
+                            ->value('totalMaximo'); // Obtener solo el valor del conteo total máximo de empleados activos
+
+        // Si no hay empleados, devolver un estado adecuado
+        if (!$totalEmpleados) {
+            return response()->json(['error' => 'No hay empleados disponibles'], 400);
+        }
+
+        // Inicializar el array que contendrá las fechas y su disponibilidad
+        $fechas = [];
+
+        // Revisar cada resultado y asignar la disponibilidad
+        foreach ($results as $result) {
+
+            $fechas[] = [
+                'title' => $result->cantidad >= $totalEmpleados ? 'Lleno' : 'Disponible',
+                'start' => $result->fecha_cita,
+                'allDay' => true,
+                'display' => 'background',
+                'backgroundColor' => $result->cantidad >= $totalEmpleados ? 'red' : 'green', // Rojo si está lleno, verde si está disponible
+                'textColor' => 'white',
+                'classNames' => $result->cantidad >= $totalEmpleados ? ['Lleno'] : ['Disponible']
+            ];
+        }
+
+        // Retornar los resultados en formato JSON
+        return response()->json($fechas);
     }
 }

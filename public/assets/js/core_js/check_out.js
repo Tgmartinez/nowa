@@ -10,37 +10,15 @@ let checkOut = {
         // Agregar el id del producto
         $('#id_producto').val(id);
 
-        // Funciones principales
-        checkOut.fn_calendario();
-
         // Obtener lista para pagar
         checkOut.fn_customerConnekta();
 
-        //Crear la oreden
+        //Crear la Orden
         checkOut.fn_fnCreateOrder();
 
-        // 
         checkOut.fn_eventos_clicks();
 
         checkOut.fn_modalAgregarEfecto();
-    },
-
-    fn_calendario: function () {
-        flatpickr("#appointmentDateTime", {
-            inline: true,
-            minDate: new Date().fp_incr(3), // 3 días desde la fecha actual
-            maxDate: new Date().fp_incr(60), // 60 días desde la fecha actual
-            dateFormat: "Y-m-d H:i",
-            locale: "es", // Esto establece el calendario en español
-            defaultDate: localStorage.getItem('selectedDate') || null, // Fecha predeterminada desde el caché
-            onChange: function(selectedDates, dateStr, instance) {
-                // Guardar la fecha seleccionada en caché
-                localStorage.setItem('selectedDate', dateStr);
-                
-                // Validar el formulario cuando se selecciona una fecha
-                $("#form_check_out").valid();
-            }
-        });
     },
 
     fn_customerConnekta: function () {
@@ -154,22 +132,30 @@ let checkOut = {
                 height: 'auto', // Ajustar la altura automáticamente
                 contentHeight: 500, // Ajustar la altura del contenido
                 aspectRatio: 1.35, // Reducir la relación de aspecto
-                events: [
-                    {
-                        title: 'Evento 1',
-                        start: '2024-07-20'
-                    },
-                    {
-                        title: 'Lleno',
-                        start: '2024-07-31',
-                        allDay: true,
-                        display: 'background',
-                        backgroundColor: 'red',
-                        textColor: 'white',
-                        description: 'Lleno',
-                        classNames: ['Lleno']
-                    }
-                ],
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    $.ajax({
+                        url: "horarasSeleccionados",
+                        type: "GET",
+                        dataType: "json",
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        success: function(response) {
+                            var events = response.map(function(item) {
+                                return {
+                                    title: item.title,
+                                    start: item.start,
+                                    backgroundColor: item.isFull ? 'green' : '#3788d8',
+                                    textColor: item.isFull ? 'white' : 'black',
+                                    display: item.isFull ? 'background' : 'block',
+                                    classNames: item.isFull ? ['Lleno'] : []
+                                };
+                            });
+                            successCallback(events);
+                        },
+                        error: function() {
+                            failureCallback();
+                        }
+                    });
+                },
                 eventClick: function(info) {
 
                     var events = calendar.getEvents();
@@ -344,7 +330,7 @@ let checkOut = {
                     var endHour = startHour + 2;
                     var endHourFormatted = endHour < 10 ? '0' + endHour + ':00' : endHour + ':00';
                     var endTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${endHourFormatted}:00`));
-                    var startTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${hora}:00`));
+                    var startTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${endHourFormatted}:00`));
                     calendar.addEvent({
                         title: `${startTime} - ${endTime} (${titulo})`,
                         start: selectedDate + 'T' + hora,

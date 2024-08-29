@@ -237,4 +237,11 @@ Route::get('get_citas_diez', [CitasController::class, 'get_citas_diez']);
 Route::get('descargar_plantilla_citas', [CitasController::class, 'descargar_plantilla_citas']);
 Route::get('validar_existencia_citas', [CitasController::class, 'validar_existencia_citas']);
 Route::post('get_cita_disponible', [CitasController::class, 'get_cita_disponible']);
+Route::get('horarasSeleccionados', [CitasController::class, 'horarasSeleccionados']);
+
+
+
+
+
+
 

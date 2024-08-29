@@ -45,8 +45,8 @@ let empresa = {
                         }
                     },
                     error: function (response) {
+                        console.log("response", response);
                         $loading.waitMe('hide');
-                        alert('Error al guardar los datos.');
                     }
                 });
             },
