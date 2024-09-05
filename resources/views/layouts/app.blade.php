@@ -85,6 +85,7 @@
         <script src="assets/js/core_js/waitMe.js"></script>
         <link href="assets/js/core_js/waitMe.css?{{ rand() }}" rel="stylesheet" type="text/css">
         <link href="assets/js/core_js/core.css?{{ rand() }}" rel="stylesheet" type="text/css">
+        <script src="assets/js/core_js/core.js?{{ rand() }}"></script>
         <!-- Sweet Alert-->
         <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
         <!-- Sweet Alerts js -->
@@ -133,8 +134,8 @@
         <div id="responsive-overlay"></div>
         <!-- Scroll To Top -->
 
-
         @include('layouts.scripts')
 
+        {{-- @include('layouts.terminal') --}}
     </body>
 </html>
