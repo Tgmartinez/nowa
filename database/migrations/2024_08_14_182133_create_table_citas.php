@@ -16,12 +16,12 @@ return new class extends Migration
 
         Schema::connection('mysql')->create('citas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('id_user')->nullable()->comment('Identificador de la empresa')->index();
-            $table->bigInteger('id_empleado')->nullable()->comment('Identificador del empleado')->index();
-            $table->bigInteger('id_cliente')->nullable()->comment('Identificador del cliente')->index();
+            $table->bigInteger('id_empresa')->comment('Identificador de la empresa')->index();
+            $table->bigInteger('id_empleado')->comment('Identificador del empleado')->index();
+            $table->bigInteger('id_cliente')->comment('Identificador del cliente')->index();
             $table->string('fecha_cita', 30)->nullable()->comment('Fecha de la cita');
-            $table->string('hora_inicio', 30)->nullable()->comment('Hora de inicio de la cita');
-            $table->string('hora_fin', 30)->nullable()->comment('Hora de fin de la cita');
+            $table->time('hora_inicio')->comment('Hora de inicio de la cita');
+            $table->time('hora_fin')->comment('Hora de fin de la cita');
             $table->string('estado', 30)->nullable()->comment('Estado actual de la cita');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('Fecha de creación de la cita');
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('Fecha de última actualización de la cita');

@@ -694,40 +694,35 @@ class CitasController extends Controller
     | @return json
     |
     */
-    public function horarasSeleccionados(Request $request)
-    {
-        // Llamada al procedimiento almacenado para obtener los horarios ocupados
-        $results = DB::select('CALL sp_get_horarios_ocupados()');
+        public function horarasSeleccionados(Request $request)
+        {
+            try {
+                // Lista de horarios que ya están apartados
+                $results = DB::select('CALL sp_get_horarios_ocupados()');
 
-        // Consulta para saber el número máximo de empleados disponibles
-        $totalEmpleados = DB::table('empleados')
-                            ->select(DB::raw('COUNT(id_user) as totalMaximo'))
-                            ->where('b_status', 1)
-                            ->value('totalMaximo'); // Obtener solo el valor del conteo total máximo de empleados activos
+                $fechas = [];
+                foreach ($results as $result) {
+                    $totalEmpleados = $result->totalEmpleados; // Obtiene el total de empleados para la fecha desde el SP
+                    $isFull = $result->cantidad == $totalEmpleados;
 
-        // Si no hay empleados, devolver un estado adecuado
-        if (!$totalEmpleados) {
-            return response()->json(['error' => 'No hay empleados disponibles'], 400);
+                    if ($isFull){
+                        $fechas[] = [
+                            'title' => $isFull ? 'Lleno' : 'Agendado ',
+                            'start' => $result->fecha_cita,
+                            'end' =>  $result->hora_fin,
+                            'allDay' => false, // Especifica si el evento dura todo el día
+                            'display' => $isFull ? 'background': 'display',
+                            'backgroundColor' => $isFull ? 'red' : 'green', // Rojo si está lleno, verde si está agendado
+                            'textColor' => 'white',
+                            'classNames' => $isFull ? ['Lleno'] : ['Agendado']
+                        ];
+                    }
+                }
+
+                return response()->json($fechas);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error en el servidor: ' . $e->getMessage()], 500);
+            }
         }
 
-        // Inicializar el array que contendrá las fechas y su disponibilidad
-        $fechas = [];
-
-        // Revisar cada resultado y asignar la disponibilidad
-        foreach ($results as $result) {
-
-            $fechas[] = [
-                'title' => $result->cantidad >= $totalEmpleados ? 'Lleno' : 'Disponible',
-                'start' => $result->fecha_cita,
-                'allDay' => true,
-                'display' => 'background',
-                'backgroundColor' => $result->cantidad >= $totalEmpleados ? 'red' : 'green', // Rojo si está lleno, verde si está disponible
-                'textColor' => 'white',
-                'classNames' => $result->cantidad >= $totalEmpleados ? ['Lleno'] : ['Disponible']
-            ];
-        }
-
-        // Retornar los resultados en formato JSON
-        return response()->json($fechas);
-    }
 }

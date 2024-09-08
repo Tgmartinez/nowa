@@ -146,6 +146,7 @@ class CheckOutController extends Controller
             $order = $this->conektaService->createOrder($orderData);
 
             $inserted = DB::table('citas')->insert([
+                'id_empresa' => 1,
                 'id_empleado' => $id_empleado,
                 'id_cliente' => Auth::user()->id,
                 'fecha_cita' => $fechaSeleccionado,
@@ -181,18 +182,6 @@ class CheckOutController extends Controller
 
     public function empleadoDisponible(Request $request)
     {
-        // array:8 [ // app/Http/Controllers/CheckOutController.php:183
-        //   "shippingAddress" => "on"
-        //   "selected_card" => array:1 [
-        //     0 => "src_2wSK9DvGMXSWkn7nJ"
-        //   ]
-        //   "customer_id" => "cus_2wSK9DvGMXSWkn7nD"
-        //   "card_id" => "src_2wSK9DvGMXSWkn7nJ"
-        //   "id_producto" => "eyJpdiI6ImdGbEVucGZ3MjF5cTF6anB0KzF3b2c9...."
-        //   "fechaSeleccionado" => "2024-08-29"
-        //   "hora_inicio" => "8:00"
-        //   "hora_fin" => "10:00"
-        // ]  
 
         $fechaSeleccionado= $request->fechaSeleccionado;
         $hora_inicio= $request->hora_inicio;

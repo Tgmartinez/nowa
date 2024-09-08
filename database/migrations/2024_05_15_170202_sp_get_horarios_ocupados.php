@@ -18,14 +18,15 @@ return new class extends Migration
             BEGIN
 
                 SELECT
-                    COUNT(hora_inicio) AS cantidad,
+                    fecha_cita,
                     hora_inicio,
                     hora_fin,
-                    fecha_cita
+                    COUNT(id_empleado) AS cantidad,
+                    (SELECT COUNT(*) FROM empleados WHERE b_status = 1) AS totalEmpleados
                 FROM
                     citas
                 GROUP BY
-                    hora_inicio, hora_fin, fecha_cita;       
+                    fecha_cita, hora_inicio, hora_fin;
 
             END
         ');

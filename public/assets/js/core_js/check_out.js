@@ -139,7 +139,7 @@ let checkOut = {
                         dataType: "json",
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         success: function(response) {
-                            console.log("response", response);
+
                             var events = response.map(function(item) {
                                 return {
                                     title: item.title,
