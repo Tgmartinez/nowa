@@ -134,28 +134,31 @@ let checkOut = {
                 aspectRatio: 1.35, // Reducir la relación de aspecto
                 events: function(fetchInfo, successCallback, failureCallback) {
                     $.ajax({
-                        url: "horarasSeleccionados",
+                        url: "horarasSeleccionados",  // Endpoint para obtener los horarios ocupados
                         type: "GET",
                         dataType: "json",
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         success: function(response) {
+                            console.log("response", response);
                             var events = response.map(function(item) {
                                 return {
                                     title: item.title,
                                     start: item.start,
-                                    backgroundColor: item.isFull ? 'green' : '#3788d8',
-                                    textColor: item.isFull ? 'white' : 'black',
-                                    display: item.isFull ? 'background' : 'block',
-                                    classNames: item.isFull ? ['Lleno'] : []
+                                    end: item.end, // Asegúrate de que cada evento tiene un 'end' si es necesario
+                                    backgroundColor: item.backgroundColor,
+                                    textColor: item.textColor,
+                                    display: item.display,
+                                    classNames: item.classNames
                                 };
                             });
-                            successCallback(events);
+                            successCallback(events);  // Envía los eventos formateados al calendario
+                            console.log("events", events);
                         },
                         error: function() {
                             failureCallback();
                         }
                     });
-                },
+                },                
                 eventClick: function(info) {
 
                     var events = calendar.getEvents();
@@ -225,6 +228,7 @@ let checkOut = {
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         type: 'POST',
                         success: function (response) {
+                            console.log("response", response);
 
                             // Asegúrate de que la respuesta contiene "horariosOcupados"
                             if (response.horariosOcupados && response.horariosOcupados.length > 0) {
@@ -318,19 +322,21 @@ let checkOut = {
                 var form = document.getElementById('agendarCitaForm');
                 var formData = new FormData(form);
                 var hora = formData.get('hora');
+                console.log("hora", hora);
                 var titulo = 'Agendar';
-
-                console.log('Formulario enviado:', Object.fromEntries(formData.entries()));
 
                 document.cookie = "fechaSeleccionado=ok";
 
                 if (selectedDate && hora) {
                     // Calcular la hora de fin
                     var startHour = parseInt(hora.split(':')[0]);
-                    var endHour = startHour + 2;
+                    var endHour = startHour + 2 ;
+
+                    var startHourFormatted = startHour < 10 ? '0' + startHour + ':00' : startHour + ':00';
                     var endHourFormatted = endHour < 10 ? '0' + endHour + ':00' : endHour + ':00';
+
+                    var startTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${startHourFormatted}:00`));
                     var endTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${endHourFormatted}:00`));
-                    var startTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${endHourFormatted}:00`));
                     calendar.addEvent({
                         title: `${startTime} - ${endTime} (${titulo})`,
                         start: selectedDate + 'T' + hora,
@@ -374,9 +380,9 @@ let checkOut = {
                     if (differenceInDays === 0) {
                         daysText = "mañana";
                     } else if (differenceInDays === 1) {
-                        daysText = "1 día restante";
+                        daysText = "Falta 1 día ";
                     } else {
-                        daysText = `${differenceInDays} días restantes`;
+                        daysText = `Falta ${differenceInDays} días `;
                     }
 
                     // Formatear fecha y hora para el mensaje de confirmación

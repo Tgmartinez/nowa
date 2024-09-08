@@ -25,7 +25,7 @@
 <link href="assets/js/core_js/bootstrap-select.css" rel="stylesheet" type="text/css">
 
 <!-- Select2 Cdn -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="assets/js/core_js/select2.min.js"></script>
 
 <!-- Internal Select-2.js -->
 <script src="../assets/js/select2.js"></script>
@@ -62,5 +62,5 @@
 <script src="assets/js/core_js/admin-resources/rwd-table/rwd-table.min.js?{{ rand() }}"></script>
 <script src="assets/js/core_js/table-responsive.init.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="assets/js/core_js/angular.min.js"></script>
 <script src="assets/js/core_js/ng-infinite-scroll.js?<?php echo rand();?>"></script>

@@ -32,23 +32,23 @@
         <link rel="stylesheet" href="assets/libs/@simonwep/pickr/themes/nano.min.css">
         <!-- Choices Css -->
         <link rel="stylesheet" href="assets/libs/choices.js/public/assets/styles/choices.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+        <link href="assets/js/core_js/select2.min.css" rel="stylesheet">
 
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="assets/js/core_js/icon?family=Material+Icons" rel="stylesheet">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" >
+        <link href="assets/js/core_js/css?family=figtree:400,500,600&display=swap" rel="stylesheet" >
 
         <!-- //////////////////////////////////////////////////////////////////////////////////// -->
         <!-- //////////////////////////////////////////////////////////////////////////////////// -->
         <script src="assets/js/core_js/jquery-3.6.0.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="js/core_js/jquery-ui.min.js"></script>
 
         <!-- Cleave.js -->
         <script src="assets/libs/cleave.js/cleave.min.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" crossorigin="anonymous"></script>
+        <script src="js/core_js/lazysizes.min.js" crossorigin="anonymous"></script>
 
         <!-- flatpickr js -->
         <script src="assets/js/core_js/flatpickr.min.js?{{ rand() }}"></script>
@@ -56,17 +56,17 @@
         <link href="assets/js/core_js/flatpickr.css" rel="stylesheet" type="text/css" >
 
         <!-- Toastr CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" href="assets/js/core_js/toastr.min.css">
 
         <!-- Toastr JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="assets/js/core_js/toastr.min.js"></script>
 
         <!--  Mousetrap -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.5/mousetrap.min.js"></script>
+        <script src="assets/js/core_js/mousetrap.min.js"></script>
 
         <!-- Noty -->
         <script src="assets/js/core_js/noty.min.js"></script>
-        <link rel="stylesheet" href="//cdn.rawgit.com/needim/noty/77268c46/lib/noty.css">
+        <link rel="stylesheet" href="assets/js/core_js/noty.css">
         <!-- Datatables -->
         <link href="assets/js/core_js/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
         <link href="assets/js/core_js/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
@@ -85,7 +85,7 @@
         <script src="assets/js/core_js/waitMe.js"></script>
         <link href="assets/js/core_js/waitMe.css?{{ rand() }}" rel="stylesheet" type="text/css">
         <link href="assets/js/core_js/core.css?{{ rand() }}" rel="stylesheet" type="text/css">
-        <script src="assets/js/core_js/core.js?{{ rand() }}"></script>
+        {{-- <script src="assets/js/core_js/core.js?{{ rand() }}"></script> --}}
         <!-- Sweet Alert-->
         <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
         <!-- Sweet Alerts js -->
