@@ -222,47 +222,52 @@ let checkOut = {
                     // =================================================
                     // Obtener los horarios disponible 
                     $.ajax({
-                        url: "get_cita_disponible",
-                        data: {fechaSeleccionado: fechaSeleccionado , diaSeleccionado : diaSeleccionado },
+                        url: "buscarHorarioDisponibleEvent",
+                        data: {fechaSeleccionado: fechaSeleccionado, diaSeleccionado: diaSeleccionado},
                         cache: false,
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         type: 'POST',
                         success: function (response) {
-                            console.log("response", response);
 
-                            // Asegúrate de que la respuesta contiene "horariosOcupados"
-                            if (response.horariosOcupados && response.horariosOcupados.length > 0) {
+                            // Asegúrate de que la respuesta contiene horarios
+                            if (response && response.length > 0) {
 
-                                // Recorrer los valores de "horariosOcupados"
-                                response.horariosOcupados.forEach(function(horario) {
-                                    // Deshabilitar las opciones que coinciden con "hora_inicio"
-                                    $('input[name="hora"]').each(function() {
-
-                                        if ($(this).val() === horario.hora_inicio && horario.total == horario.contador) {
-                                            $(this).attr('disabled', true);
-                                            $(this).closest('label').addClass('bg-danger text-white');
-                                        }
-                                    });
-                                });
-                            }else{
-
-                                // Habilitar las opciones que coinciden con "hora_inicio"
+                                // Recorrer cada input radio que representa una hora disponible en el formulario
                                 $('input[name="hora"]').each(function() {
-                                    $(this).attr('disabled', false);
-                                    $(this).closest('label').removeClass('bg-danger text-white');
-                                });                                
+                                    let inputHora = $(this); // El input de la hora actual
+
+                                    // Recorrer los horarios devueltos en la respuesta para comparar
+                                    let horarioEncontrado = false; // Bandera para identificar si se encontró un horario
+
+                                    response.forEach(function(horario) {
+
+                                        if (horario.comparacion == "Iguales" && inputHora.val() == horario.hora_ini) {                                            
+                                            inputHora.attr('disabled', true); // Deshabilitar input
+                                            inputHora.closest('label').addClass('bg-danger text-white'); // Marcar en rojo
+                                        }
+
+
+                                    });
+
+                                });
+
+                            } else {
+                                // Si no hay horarios en la respuesta, habilitar todas las opciones
+                                $('input[name="hora"]').each(function() {
+                                    $(this).attr('disabled', false); // Habilitar todas las opciones
+                                    $(this).closest('label').removeClass('bg-danger text-white'); // Quitar la clase de peligro
+                                });
                             }
 
-                            // RECORRER VALORES
-                            if ($('#fechaSeleccionado').length){
+                            // Agregar o actualizar el campo oculto con la fecha seleccionada
+                            if ($('#fechaSeleccionado').length) {
                                 $('#form_check_out #fechaSeleccionado').remove();
                             }
-
-                            $('#form_check_out').append('<input type="text" id="fechaSeleccionado" name="fechaSeleccionado" value="'+fechaSeleccionado+'"> ');
+                            $('#form_check_out').append('<input type="text" id="fechaSeleccionado" name="fechaSeleccionado" value="' + fechaSeleccionado + '"> ');
 
                         },
                         error: function (response) {
-
+                            console.error('Error en la petición', response);
                         }
                     });
 
@@ -291,11 +296,17 @@ let checkOut = {
                         console.log(exists ? "La cookie existe." : "La cookie no existe.");
                     }
 
-                    // Verificar si hay un evento de "Lleno" en la fecha seleccionada
+                    // Obtener la fecha desde info.dateStr sin que se ajuste por la zona horaria
+                    const fechaStr = info.dateStr; // '2024-09-27'
+                    const [_year, _month, _day] = fechaStr.split('-'); // Dividir la fecha por año, mes, día
+                    const fecha = new Date(_year, _month - 1, _day); // Crear un objeto Date sin ajustar la zona horaria
                     var events = calendar.getEvents();
-                    var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(new Date(info.dateStr));
                     var isDateFull = events.some(event => event.startStr === info.dateStr && event.title === 'Lleno');
 
+                    // Formatear la fecha al estilo deseado
+                    const formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(fecha);
+
+                    // Mostrar la fecha en el elemento con ID 'eventDetails'
                     document.getElementById('eventDetails').innerText = formattedDate;
 
                     if (isDateFull) {
@@ -305,7 +316,7 @@ let checkOut = {
 
                     // Si se selecciona una nueva fecha, restablecer el calendario y el formulario
                     if (selectedDate && selectedDate !== info.dateStr) {
-                        // document.getElementById('agendarCitaForm').reset();
+                        document.getElementById('agendarCitaForm').reset();
                     }
 
                     selectedDate = info.dateStr;
@@ -322,7 +333,6 @@ let checkOut = {
                 var form = document.getElementById('agendarCitaForm');
                 var formData = new FormData(form);
                 var hora = formData.get('hora');
-                console.log("hora", hora);
                 var titulo = 'Agendar';
 
                 document.cookie = "fechaSeleccionado=ok";
@@ -386,7 +396,8 @@ let checkOut = {
                     }
 
                     // Formatear fecha y hora para el mensaje de confirmación
-                    var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(targetDate);
+                    var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(targetDate.getTime() + today.getTime());
+                    
                     var formattedTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${hora}:00`));
                     var formattedDateTime = `<strong style="color: green;">${formattedDate} a las ${formattedTime}</strong> (${daysText})`;
 

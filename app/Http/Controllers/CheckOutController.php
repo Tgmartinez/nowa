@@ -89,6 +89,7 @@ class CheckOutController extends Controller
         // Pasar los datos a la vista
         return view('check_out', compact('productos'));
 
+
     }
 
     /*
@@ -188,7 +189,7 @@ class CheckOutController extends Controller
         $hora_fin= $request->hora_fin;
 
         // Obtener mis empleados
-        $idUsers = DB::table('empleados')->pluck('id_user')->values()->all();
+        $idUsers = DB::table('empleados')->pluck('id')->values()->all();
 
         // Obtener los IDs de empleados ocupados en la fecha y horario especificados desde la tabla citas
         $idUsersOcupados = DB::table('citas')

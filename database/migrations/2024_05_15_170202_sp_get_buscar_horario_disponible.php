@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('mysql')->getConnection()->statement('
-            CREATE PROCEDURE sp_get_horarios_ocupados()
+            CREATE PROCEDURE sp_get_buscar_horario_disponible(IN fechaSeleccionado DATE)
             BEGIN
 
                 SELECT
@@ -30,7 +30,7 @@ return new class extends Migration
                     END AS comparacion
                 FROM
                     citas
-                WHERE citas.b_status = 1
+                WHERE fecha_cita = fechaSeleccionado
                 GROUP BY
                     fecha_cita, hora_inicio, hora_fin;
 
@@ -45,7 +45,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql')->getConnection()->statement('DROP PROCEDURE IF EXISTS sp_get_horarios_ocupados');
+        Schema::connection('mysql')->getConnection()->statement('DROP PROCEDURE IF EXISTS sp_get_buscar_horario_disponible');
 
     }
 };

@@ -603,69 +603,6 @@ class CitasController extends Controller
         DB::unprepared('DROP PROCEDURE IF EXISTS `sp_get_citas` ');
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Revisar si existe horario disponible
-    |--------------------------------------------------------------------------
-    | 
-    | @return json
-    |
-    */
-    public function get_cita_disponible(Request $request)
-    {
-        $diaSeleccionado  = $request->diaSeleccionado;
-        $fechaSeleccionado= $request->fechaSeleccionado;
-
-        // Validar si el dia est disponible
-        $validarDiaDisponible = $this->validarDiaDisponible($request);
-        if( !$validarDiaDisponible )
-            return response()->json(['b_status' => false, 'vc_message' => 'No disponible esta fecha '. $diaSeleccionado ]);
-
-        // Obtener los IDs de usuarios
-        $idUsers = DB::table('empleados')
-                    ->pluck('id_user')
-                    ->toArray();
-
-        // Obtener los IDs de empleados
-        $idEmpleados = DB::table('citas')
-                        ->where('fecha_cita', $fechaSeleccionado)
-                        ->where('b_status', 1)
-                        ->pluck('id_empleado')
-                        ->toArray();
-
-        $contadorIndependiente = count($idUsers); // Ejemplo de contador inicial
-
-        // Comparar si los dos arreglos son iguales
-        $sonIguales = empty(array_diff($idUsers, $idEmpleados)) && empty(array_diff($idEmpleados, $idUsers));
-
-        if (!$sonIguales) {
-            $horariosOcupados = DB::table('citas')
-                                ->where('fecha_cita', $fechaSeleccionado)
-                                ->where('b_status', 1)
-                                ->select('id_empleado', 'hora_inicio', 'hora_fin')
-                                ->get();
-        }else{
-
-            $horariosOcupados = DB::table('citas')
-                ->where('fecha_cita', $fechaSeleccionado)
-                ->select('hora_inicio', DB::raw('COUNT(id_empleado) as total'))
-                ->groupBy('hora_inicio')
-                ->get()
-                ->map(function ($item) use (&$contadorIndependiente) {
-                    $item->contador = $contadorIndependiente;
-                    return $item;
-                });
-
-        }
-
-        return response()->json(['horariosOcupados' => $horariosOcupados]);
-
-    }
-
-
-
-
     /*
     |--------------------------------------------------------------------------
     | Revisar si existe horario disponible
@@ -694,35 +631,91 @@ class CitasController extends Controller
     | @return json
     |
     */
-        public function horarasSeleccionados(Request $request)
-        {
-            try {
-                // Lista de horarios que ya están apartados
-                $results = DB::select('CALL sp_get_horarios_ocupados()');
+    public function horarasSeleccionados(Request $request)
+    {
+        try {
 
-                $fechas = [];
-                foreach ($results as $result) {
-                    $totalEmpleados = $result->totalEmpleados; // Obtiene el total de empleados para la fecha desde el SP
-                    $isFull = $result->cantidad == $totalEmpleados;
 
-                    if ($isFull){
-                        $fechas[] = [
-                            'title' => $isFull ? 'Lleno' : 'Agendado ',
-                            'start' => $result->fecha_cita,
-                            'end' =>  $result->hora_fin,
-                            'allDay' => false, // Especifica si el evento dura todo el día
-                            'display' => $isFull ? 'background': 'display',
-                            'backgroundColor' => $isFull ? 'red' : 'green', // Rojo si está lleno, verde si está agendado
-                            'textColor' => 'white',
-                            'classNames' => $isFull ? ['Lleno'] : ['Agendado']
-                        ];
-                    }
-                }
+            // Lista de horarios que ya están apartados
+            $results = DB::select('CALL sp_get_horarios_ocupados()');
 
-                return response()->json($fechas);
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Error en el servidor: ' . $e->getMessage()], 500);
+            // Inicializa un array para agrupar por fecha
+            $fechasAgrupadas = [];
+
+            // Agrupa los resultados por fecha
+            foreach ($results as $result) {
+                $fechasAgrupadas[$result->fecha_cita][] = $result;
             }
+
+            $fechas = [];
+
+            foreach ($fechasAgrupadas as $fecha => $citas) {
+
+                // Detectar si hay "Diferentes" en las citas de esta fecha
+                $hayDiferentes = array_filter($citas, function ($cita) {
+                    return $cita->comparacion === "Diferentes";
+                });
+
+                // Solo proceder si hay 4 o más citas en la misma fecha y no hay "Diferentes"
+                if (count($citas) >= 4 && empty($hayDiferentes)) {
+                        $fechas[] = [
+                            'title' => 'Lleno',
+                            'start' => $fecha,
+                            'end' => $fecha,
+                            'allDay' => false, // Especifica si el evento dura todo el día
+                            'display' => 'background',
+                            'backgroundColor' => 'red', // Rojo si está lleno, verde si está agendado
+                            'textColor' => 'white',
+                            'classNames' => 'Lleno'
+                        ];
+                }
+            }
+
+            return response()->json($fechas);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error en el servidor: ' . $e->getMessage()], 500);
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Al seleccionar una fecha mostrar el modal
+    | Objetivo: marcar en rojo el horario que ya no este disponible
+    |--------------------------------------------------------------------------
+    | 
+    | @return json
+    |
+    */
+    public function buscarHorarioDisponibleEvent(Request $request)
+    {
+        $fechaSeleccionado = $request->fechaSeleccionado;
+
+        try {
+            // Lista de horarios que ya están apartados
+            $results = DB::select('CALL sp_get_horarios_ocupados_by_fecha(?)', [$fechaSeleccionado]);
+            $fechas = [];
+            
+            foreach ($results as $result) {
+                $totalEmpleados = $result->totalEmpleados; // Obtiene el total de empleados para la fecha desde el SP
+                $isFull = $result->cantidad == $totalEmpleados;
+
+                $cantidadSeleccionado[] = $result->cantidad;
+                $totalEmpleadosPorEmpresa[] = $result->totalEmpleados;
+
+                $fechas[] = [
+                    'hora_ini' => $result->hora_inicio,
+                    'hora_fin' => $result->hora_fin,
+                    'comparacion' => $result->comparacion,
+                    'cantidad' => $result->cantidad,
+                    'totalEmpleados' => $result->totalEmpleados
+                ];
+
+            }
+
+            return response()->json($fechas);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error en el servidor: ' . $e->getMessage()], 500);
+        }
+    }
 
 }

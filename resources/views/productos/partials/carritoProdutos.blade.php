@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="column"><a class="btn btn-warning" href="check_out?id={{ $carrito }}"> <span class="text-dark">Proceder al pago   </span></a></div>
+                    <div class="column"><a class="btn btn-warning" href="checkOut?id={{ $carrito }}"> <span class="text-dark">Proceder al pago   </span></a></div>
                 </div>
             </div>
         </div>

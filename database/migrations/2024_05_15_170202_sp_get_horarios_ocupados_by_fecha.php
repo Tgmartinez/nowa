@@ -14,9 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('mysql')->getConnection()->statement('
-            CREATE PROCEDURE sp_get_horarios_ocupados()
+            CREATE PROCEDURE sp_get_horarios_ocupados_by_fecha(IN fecha_param DATE)
             BEGIN
-
                 SELECT
                     fecha_cita,
                     TIME_FORMAT(hora_inicio, \'%H:%i\') AS hora_inicio,
@@ -30,14 +29,14 @@ return new class extends Migration
                     END AS comparacion
                 FROM
                     citas
-                WHERE citas.b_status = 1
+                WHERE
+                    fecha_cita = fecha_param AND citas.b_status = 1
                 GROUP BY
                     fecha_cita, hora_inicio, hora_fin;
-
-
             END
         ');
     }
+
     /**
      * Reverse the migrations.
      *
@@ -45,7 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql')->getConnection()->statement('DROP PROCEDURE IF EXISTS sp_get_horarios_ocupados');
-
+        Schema::connection('mysql')->getConnection()->statement('DROP PROCEDURE IF EXISTS sp_get_horarios_ocupados_by_fecha');
     }
 };

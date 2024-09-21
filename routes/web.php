@@ -106,7 +106,7 @@ Route::get('validar_existencia_detalle', [DetalleController::class, 'validar_exi
 Route::get('/producto/{id}', [DetalleController::class, 'get_data_by_id']);
 
 use App\Http\Controllers\CheckOutController;
-Route::get('check_out', [CheckOutController::class, 'index'])->middleware('auth') ;
+Route::get('checkOut', [CheckOutController::class, 'index'])->middleware('auth') ;
 Route::post('fnCreateOrder', [CheckOutController::class, 'fnCreateOrder']);
 Route::post('get_check_out_by_id', [CheckOutController::class, 'get_check_out_by_id']);
 Route::post('process-payment', [CheckOutController::class, 'processPayment'])->name('process.payment');
@@ -236,8 +236,9 @@ Route::post('get_citas_by_list', [CitasController::class, 'get_citas_by_list']);
 Route::get('get_citas_diez', [CitasController::class, 'get_citas_diez']);
 Route::get('descargar_plantilla_citas', [CitasController::class, 'descargar_plantilla_citas']);
 Route::get('validar_existencia_citas', [CitasController::class, 'validar_existencia_citas']);
-Route::post('get_cita_disponible', [CitasController::class, 'get_cita_disponible']);
 Route::get('horarasSeleccionados', [CitasController::class, 'horarasSeleccionados']);
+Route::post('buscarHorarioDisponible', [CitasController::class, 'buscarHorarioDisponible']);
+Route::post('buscarHorarioDisponibleEvent', [CitasController::class, 'buscarHorarioDisponibleEvent']);
 
 
 

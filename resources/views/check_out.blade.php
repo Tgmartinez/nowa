@@ -1,9 +1,6 @@
 <x-app-layout>
 
     <div class="row">
-
-        {{-- <div id="countdownToast" class="position-fixed-top-center  align-items-center text-white bg-primary border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true"> --}}
-
         <!-- Contenedor del Toast -->
         <div id="countdownToast" class="toast-container position-fixed-top-center text-white bg-info p-6 d-none" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast align-items-center text-white bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -158,19 +155,16 @@
                     <label for="hora" class="form-label">Hora</label>
                     <div class="list-group" id="hora-list">
                         <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="8:00" required> 08:00 AM - 10:00 AM
+                            <input class="form-check-input me-1" type="radio" name="hora" value="09:00" required> 09:00 AM - 11:00 AM
                         </label>
                         <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="10:00"> 10:00 AM - 12:00 PM
+                            <input class="form-check-input me-1" type="radio" name="hora" value="11:00"> 11:00 AM - 13:00 PM
                         </label>
                         <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="12:00" required> 12:00 PM - 02:00 PM
+                            <input class="form-check-input me-1" type="radio" name="hora" value="14:00" required> 14:00 PM - 16:00 PM
                         </label>
                         <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="14:00" required> 02:00 PM - 04:00 PM
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="hora" value="16:00"> 04:00 PM - 06:00 PM
+                            <input class="form-check-input me-1" type="radio" name="hora" value="16:00" required> 16:00 PM - 18:00 PM
                         </label>
                     </div>
                 </div>
@@ -181,22 +175,21 @@
 
     <!-- Modal de confirmación -->
     <div class="modal fade" tabindex="-1" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmationModalLabel">Confirmación</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- El mensaje se actualizará dinámicamente -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-          </div>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirmación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- El mensaje se actualizará dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
 
 </x-app-layout>
 
