@@ -139,7 +139,6 @@ let checkOut = {
                         dataType: "json",
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         success: function(response) {
-
                             var events = response.map(function(item) {
                                 return {
                                     title: item.title,
@@ -152,7 +151,6 @@ let checkOut = {
                                 };
                             });
                             successCallback(events);  // Envía los eventos formateados al calendario
-                            console.log("events", events);
                         },
                         error: function() {
                             failureCallback();
@@ -231,24 +229,17 @@ let checkOut = {
 
                             // Asegúrate de que la respuesta contiene horarios
                             if (response && response.length > 0) {
-
                                 // Recorrer cada input radio que representa una hora disponible en el formulario
                                 $('input[name="hora"]').each(function() {
                                     let inputHora = $(this); // El input de la hora actual
-
                                     // Recorrer los horarios devueltos en la respuesta para comparar
                                     let horarioEncontrado = false; // Bandera para identificar si se encontró un horario
-
                                     response.forEach(function(horario) {
-
                                         if (horario.comparacion == "Iguales" && inputHora.val() == horario.hora_ini) {                                            
                                             inputHora.attr('disabled', true); // Deshabilitar input
                                             inputHora.closest('label').addClass('bg-danger text-white'); // Marcar en rojo
                                         }
-
-
                                     });
-
                                 });
 
                             } else {
@@ -338,6 +329,27 @@ let checkOut = {
                 document.cookie = "fechaSeleccionado=ok";
 
                 if (selectedDate && hora) {
+
+
+                    // Fecha en formato YYYY-MM-DD
+
+                    // Separar los componentes de la fecha
+                    const [year, month, day] = selectedDate.split('-');
+
+                    // Crear el objeto Date sin conversión de zona horaria (mes en base 0)
+                    const fecha = new Date(year, month - 1, day); // El mes debe restar 1 porque los meses en JS van de 0 a 11
+
+                    // Opciones para formatear la fecha
+                    const opciones = {
+                        weekday: 'long', // Día de la semana (nombre completo)
+                        year: 'numeric', // Año con cuatro dígitos
+                        month: 'long', // Mes (nombre completo)
+                        day: 'numeric' // Día del mes
+                    };
+
+                    // Formatear la fecha en español
+                    const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
+
                     // Calcular la hora de fin
                     var startHour = parseInt(hora.split(':')[0]);
                     var endHour = startHour + 2 ;
@@ -395,11 +407,11 @@ let checkOut = {
                         daysText = `Falta ${differenceInDays} días `;
                     }
 
+
                     // Formatear fecha y hora para el mensaje de confirmación
-                    var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(targetDate.getTime() + today.getTime());
-                    
+                    var formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'full' }).format(differenceInTime+ today.getTime()); 
                     var formattedTime = new Intl.DateTimeFormat('es-ES', { timeStyle: 'short' }).format(new Date(`1970-01-01T${hora}:00`));
-                    var formattedDateTime = `<strong style="color: green;">${formattedDate} a las ${formattedTime}</strong> (${daysText})`;
+                    var formattedDateTime = `<strong style="color: green;">${fechaFormateada} a las ${formattedTime}</strong> (${daysText})`;
 
                     // Mostrar el modal de confirmación
                     showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tienes 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
@@ -516,7 +528,6 @@ let checkOut = {
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'POST',
                     success: function (response) {
-                        console.log("response", response);
 
                         let json ='';
                         try {
