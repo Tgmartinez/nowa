@@ -23,13 +23,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#step-1">
                                         <div class="num">1</div>
-                                        Agendar cita
+                                        Información del taller
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#step-2">
                                         <span class="num">2</span>
-                                        Información del taller
+                                        Agendar cita
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -43,19 +43,8 @@
                                 
                                 {{-- ========================== --}}
                                 {{-- Inicio paso 1 Agendar cita --}}
-                                <div id="step-1" class="tab-pane" role="tabpanel">
-                                    <div>
-                                        <h5 class="mb-1">Seleccione una fecha disponible</h5>
-                                    </div>
-                                    <div class="mt-4">
-                                        <div class="row gy-3">
-                                            <div id="agendar_cita_automotriz"></div>
-                                            <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div id="step-2" class="tab-pane" role="tabpanel">
+                                <div id="step-1" class="tab-pane" role="tabpanel">
                                     <div>
                                         <h5 class="mb-1">Informacion del taller</h5>
                                         <p class="text-muted mb-4">Te mostramos la dirección del taller</p>
@@ -78,6 +67,18 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="step-2" class="tab-pane" role="tabpanel">
+                                    <div>
+                                        <h5 class="mb-1">Seleccione una fecha disponible</h5>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="row gy-3">
+                                            <div id="agendar_cita_automotriz"></div>
+                                            <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
                                         </div>
                                     </div>
                                 </div>

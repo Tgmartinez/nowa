@@ -414,7 +414,7 @@ let checkOut = {
                     var formattedDateTime = `<strong style="color: green;">${fechaFormateada} a las ${formattedTime}</strong> (${daysText})`;
 
                     // Mostrar el modal de confirmación
-                    showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br>Tienes 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
+                    showConfirmationModal(`Cita seleccionado exitosamente para el ${formattedDateTime}.<br><br>Tienes 10 minutos para realizar el pago, de lo contrario, la cita será liberada para otro usuario.`);
 
                     // Iniciar el contador después de que el toast se haya mostrado
                     setTimeout(function() {
@@ -503,9 +503,9 @@ let checkOut = {
 
         // Manejar el evento de cambio de paso en SmartWizard
         $('#smartwizardCheckOut').on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
-            if (stepNumber === 0 && !calendarInitialized) { // Paso 1 y el calendario no está inicializado
+            if (stepNumber === 1 && !calendarInitialized) { // Paso 1 y el calendario no está inicializado
                 initializeCalendar();
-            } else if (stepNumber === 0 && calendarInitialized) {
+            } else if (stepNumber === 1 && calendarInitialized) {
                 calendar.render(); // Renderizar nuevamente si el calendario ya está inicializado
             }
         });
@@ -514,7 +514,6 @@ let checkOut = {
             submitHandler: function (form) {
                 let get_form = document.getElementById("form_check_out");
                 let postData = new FormData(get_form);
-
                 let element_by_id= 'form_check_out';
                 let message=  'Cargando...' ;
                 let $loading= LibreriaGeneral.f_cargando(element_by_id, message);
