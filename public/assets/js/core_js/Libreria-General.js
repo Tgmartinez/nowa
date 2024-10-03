@@ -6,6 +6,9 @@ var LibreriaGeneral = {
         LibreriaGeneral.agent();
         LibreriaGeneral.f_mask();
         LibreriaGeneral.version_php();
+
+        setInterval(LibreriaGeneral.refreshCsrfToken, 600000); // 10 minutos
+
     },
 
     JQueryValidate: function(){
@@ -136,6 +139,17 @@ var LibreriaGeneral = {
         }, "Value must not equal arg.");
 
         ///End
+    },
+
+    refreshCsrfToken: function(){
+        $.get('/refresh-csrf').done(function(data) {
+            $('meta[name="csrf-token"]').attr('content', data); // Actualiza el meta tag del token
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': data // Actualiza el token para futuras solicitudes AJAX
+                }
+            });
+        });        
     },
 
     Preview: function(){

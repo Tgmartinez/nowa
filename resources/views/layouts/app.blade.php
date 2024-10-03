@@ -33,9 +33,7 @@
         <!-- Choices Css -->
         <link rel="stylesheet" href="assets/libs/choices.js/public/assets/styles/choices.min.css">
         <link href="assets/js/core_js/select2.min.css" rel="stylesheet">
-
         <link href="assets/js/core_js/icon?family=Material+Icons" rel="stylesheet">
-
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="assets/js/core_js/css?family=figtree:400,500,600&display=swap" rel="stylesheet" >
@@ -44,26 +42,19 @@
         <!-- //////////////////////////////////////////////////////////////////////////////////// -->
         <script src="assets/js/core_js/jquery-3.6.0.min.js"></script>
         <script src="js/core_js/jquery-ui.min.js"></script>
-
         <!-- Cleave.js -->
         <script src="assets/libs/cleave.js/cleave.min.js"></script>
-
         <script src="js/core_js/lazysizes.min.js" crossorigin="anonymous"></script>
-
         <!-- flatpickr js -->
         <script src="assets/js/core_js/flatpickr.min.js?{{ rand() }}"></script>
         <script src="assets/js/core_js/es.js"></script>
         <link href="assets/js/core_js/flatpickr.css" rel="stylesheet" type="text/css" >
-
         <!-- Toastr CSS -->
         <link rel="stylesheet" href="assets/js/core_js/toastr.min.css">
-
         <!-- Toastr JS -->
         <script src="assets/js/core_js/toastr.min.js"></script>
-
         <!--  Mousetrap -->
         <script src="assets/js/core_js/mousetrap.min.js"></script>
-
         <!-- Noty -->
         <script src="assets/js/core_js/noty.min.js"></script>
         <link rel="stylesheet" href="assets/js/core_js/noty.css">
